@@ -164,7 +164,7 @@ export const spec = {
       host,
       page,
       placements,
-      coppa: config.getConfig('coppa') === true ? 1 : 0,
+      coppa: bidderRequest.coppa === true ? 1 : 0,
       ccpa: bidderRequest.uspConsent || undefined,
       gdpr: bidderRequest.gdprConsent || undefined,
       tmax: config.getConfig('bidderTimeout')
@@ -197,7 +197,7 @@ export const spec = {
     return response;
   },
 
-  getUserSyncs: (syncOptions, serverResponses, gdprConsent, uspConsent, gppConsent) => {
+  getUserSyncs: (syncOptions, serverResponses, gdprConsent, uspConsent) => {
     const spb = isPlainObject(config.getConfig('userSync')) &&
     isNumber(config.getConfig('userSync').syncsPerBidder)
       ? config.getConfig('userSync').syncsPerBidder : USERSYNC_DEFAULT_CONFIG.syncsPerBidder;
@@ -225,12 +225,6 @@ export const spec = {
       }
       if (isPlainObject(uspConsent) && uspConsent?.consentString) {
         query.push(`us_privacy=${encodeURIComponent(uspConsent?.consentString)}`);
-      }
-      if (isPlainObject(gppConsent) && gppConsent?.gppString) {
-        query.push(`gppString=${encodeURIComponent(gppConsent?.gppString)}`);
-      }
-      if (config.getConfig('coppa')) {
-        query.push('coppa=1')
       }
       const q = query.join('&')
       if (syncOptions.iframeEnabled) {
